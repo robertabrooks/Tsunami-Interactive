@@ -145,9 +145,9 @@ function draw(data) {
       })
       .on("mouseout",  function(d,i) {
         tooltip.classed("hidden", true);
-      }); 
+      });     
 
-  //EXAMPLE: adding some capitals from external CSV file
+  //adding Tsunamis from external CSV file
   d3.csv("tsunamis.csv", function(error, tsunamis) {
 
     tsunamis.forEach(function(i){
@@ -158,6 +158,8 @@ function draw(data) {
 
   });
 }
+
+
 
 function redraw() {
   width = document.getElementById('container').offsetWidth;
