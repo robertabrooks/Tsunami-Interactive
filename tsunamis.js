@@ -14,6 +14,8 @@ var graticule = d3.geo.graticule();
 
 var tooltip = d3.select("#container").append("div").attr("class", "tooltip hidden");
 
+var dataset;
+
 setup(width,height);
 
 function setup(width,height){
@@ -33,7 +35,7 @@ function setup(width,height){
   g = svg.append("g");
 }
 
-d3.json("data/world-topo-min.json", function(error, world) {
+d3.json("world-topo-min.json", function(error, world) {
 
   var countries = topojson.feature(world, world.objects.countries).features;
 
@@ -42,7 +44,7 @@ d3.json("data/world-topo-min.json", function(error, world) {
 
 });
 
-function draw(topo) {
+function draw(data) {
 
   svg.append("path")
      .datum(graticule)
@@ -85,7 +87,7 @@ function draw(topo) {
       }); 
 
   //EXAMPLE: adding some capitals from external CSV file
-  d3.csv("data/country-capitals.csv", function(err, capitals) {
+  d3.csv("country-capitals.csv", function(err, capitals) {
 
     capitals.forEach(function(i){
       addpoint(i.CapitalLongitude, i.CapitalLatitude, i.CapitalName );
@@ -165,6 +167,7 @@ function addpoint(lat,lon,text) {
           .attr("class","text")
           .text(text);
   }
+}
 
 var attributes = ["Years"];
 var ranges = [1950,2014];
@@ -185,4 +188,29 @@ $(function() {
         " - " + $( "#year" ).slider( "values", 1 ) );
 });
 
+//filter data for slider
+function filterData(attr,values) {
+  for (i = 0; i < attributes.length; i++){
+      if (attr == attributes[i]){
+          ranges[i] = values;
+      }
+    }
+    var res = patt.test(mytype);
+    if(res){
+      var toVisualize = dataset.filter(function(d) { 
+        return d[attr] >= values[0] && d[attr] <= values[1];
+      }); 
+    } else {
+      var toVisualize = dataset.filter(function(d) { 
+        return d[attr] >= values[0] && d[attr] <= values[1] && d["Type"]== mytype;
+      });
+    }
+    draw(toVisualize);
 }
+
+
+
+
+
+
+
