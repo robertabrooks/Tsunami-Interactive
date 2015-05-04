@@ -31,7 +31,6 @@ function setup(width,height){
       .append("g");
 
   g = svg.append("g");
-
 }
 
 d3.json("data/world-topo-min.json", function(error, world) {
@@ -166,4 +165,24 @@ function addpoint(lat,lon,text) {
           .attr("class","text")
           .text(text);
   }
+
+var attributes = ["Years"];
+var ranges = [1950,2014];
+var maxYear = 2014;
+
+$(function() {
+    $( "#year" ).slider({
+        range: true,
+        min:  1950,
+        max: maxYear,
+        values: [ 1950, maxYear ],
+        slide: function( event, ui ) {
+          $( "#specyear" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+          filterData("Years", ui.values);
+        }
+    });
+    $( "#specyear" ).val( $( "#year" ).slider( "values", 0 ) + 
+        " - " + $( "#year" ).slider( "values", 1 ) );
+});
+
 }

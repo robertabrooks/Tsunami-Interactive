@@ -48,6 +48,11 @@ div.tooltip {
 
   <h1>Tsunamis Worldwide 1950 - 2014</h1>
 
+  <p>Year</p>
+    <div id="yr" class="slider-range"></div>
+    <label for="rngyear">Range of Years:</label>
+    <input type="text" id="rngyear" readyonly style="border:0; color:#f6931f; font-weight:bold;">
+
   <div id="container"></div>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -226,9 +231,8 @@ function addpoint(lat,lon,text) {
           .attr("class","text")
           .text(text);
   }
-
 }
-
 </script>-->
+
 </body>
 </html>
