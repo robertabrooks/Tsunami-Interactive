@@ -127,7 +127,7 @@ function draw(data) {
       .attr("d", path)
       .attr("id", function(d,i) { return d.id; })
       .attr("title", function(d,i) { return d.properties.name; })
-      .style("fill", function(d, i) { return d.properties.color; });
+      .style("fill", function(d, i) { return d.properties.color = "#834c39"; });
 
   //offsets for tooltips
   var offsetL = document.getElementById('container').offsetLeft+20;
@@ -148,12 +148,15 @@ function draw(data) {
       }); 
 
   //EXAMPLE: adding some capitals from external CSV file
-  /*d3.csv("country-capitals.csv", function(err, capitals) {
+  d3.csv("tsunamis.csv", function(error, tsunamis) {
 
-    capitals.forEach(function(i){
-      addpoint(i.CapitalLongitude, i.CapitalLatitude, i.CapitalName );
+    tsunamis.forEach(function(i){
+      addpoint(i.Longitude, i.Latitude, i.Year);
     });
-  });*/
+
+  dataset = tsunamis;
+
+  });
 }
 
 function redraw() {
