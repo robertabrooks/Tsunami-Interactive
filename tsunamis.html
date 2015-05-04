@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title>Tsunamis Worldwide 1950 - 2014</title>
+<title>Tsunamis Across The Globe From 1950 - 2014</title>
 <style>
 /*.country:hover{
   stroke: #fff;
@@ -105,11 +105,9 @@ d3.json("world-topo-min.json", function(error, world) {
 
   topo = countries;
   draw(topo);
-
 });
 
 function draw(data) {
-
   svg.append("path")
      .datum(graticule)
      .attr("class", "graticule")
@@ -144,21 +142,18 @@ function draw(data) {
       tooltip.classed("hidden", false)
              .attr("style", "left:"+(mouse[0]+offsetL)+"px;top:"+(mouse[1]+offsetT)+"px")
              .html(d.properties.name);
-
       })
       .on("mouseout",  function(d,i) {
         tooltip.classed("hidden", true);
       }); 
 
   //EXAMPLE: adding some capitals from external CSV file
-  d3.csv("country-capitals.csv", function(err, capitals) {
+  /*d3.csv("country-capitals.csv", function(err, capitals) {
 
     capitals.forEach(function(i){
       addpoint(i.CapitalLongitude, i.CapitalLatitude, i.CapitalName );
     });
-
-  });
-
+  });*/
 }
 
 function redraw() {
