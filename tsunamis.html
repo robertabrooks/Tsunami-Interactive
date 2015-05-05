@@ -127,7 +127,7 @@ function draw(data) {
       .attr("d", path)
       .attr("id", function(d,i) { return d.id; })
       .attr("title", function(d,i) { return d.properties.name; })
-      .style("fill", function(d, i) { return d.properties.color = "#834c39"; });
+      .style("fill", function(d, i) { return d.properties.color = "#169E7B"; });
 
   //offsets for tooltips
   var offsetL = document.getElementById('container').offsetLeft+20;
@@ -155,11 +155,42 @@ function draw(data) {
     });
 
   dataset = tsunamis;
-
   });
 }
 
+function drawVis(data) {
+    var circles = svg.selectAll("circle")
+      .data(data);
+    circles
+      .attr("cx", function(d) { return x(d.Caffeine);  })
+      .attr("cy", function(d) { return y(d.Calories);  })
+      .style("fill", function(d) {return d.color;});  // Determines color
+    circles.exit().remove();
 
+  circles.enter().append("circle")
+      .attr("cx", function(d) { return x(d.Caffeine);  })
+      .attr("cy", function(d) { return y(d.Calories);  })
+      .attr("r", 4)
+      .style("fill", function(d) {return d.color;}) // Determines color
+      .style("opacity", 0.75)
+      .style("stroke", "black");
+    circles 
+    .on("mouseover", function(d,i) {
+      d3.select(this).attr("r", 9);
+      tooltip.transition()
+        .duration(200)
+        .style("opacity", 1);
+      tooltip.html("<b>"+d.Coffee+"</b><br>Calories: "+d.Calories+"<br>Caffeine: "+d.Caffeine)
+          .style("left", tooltipX+"px")
+          .style("top", tooltipY+"px");
+  })
+    .on("mouseout", function(d,i) {
+      d3.select(this).attr("r",4);
+      tooltip.transition()
+          .duration(500)
+          .style("opacity", 0)
+  });
+}
 
 function redraw() {
   width = document.getElementById('container').offsetWidth;
@@ -237,6 +268,8 @@ var attributes = ["Years"];
 var ranges = [1950,2014];
 var maxYear = 2014;
 
+
+//function for slider data
 $(function() {
     $( "#year" ).slider({
         range: true,
@@ -252,7 +285,7 @@ $(function() {
         " - " + $( "#year" ).slider( "values", 1 ) );
 });
 
-//filter data for slider
+//filter data and draw vis
 function filterData(attr,values) {
   for (i = 0; i < attributes.length; i++){
       if (attr == attributes[i]){
@@ -261,18 +294,16 @@ function filterData(attr,values) {
     }
     var res = patt.test(mytype);
     if(res){
-      var toVisualize = dataset.filter(function(d) { 
+      var toVisual = dataset.filter(function(d) { 
         return d[attr] >= values[0] && d[attr] <= values[1];
       }); 
     } else {
-      var toVisualize = dataset.filter(function(d) { 
+      var toVisual = dataset.filter(function(d) { 
         return d[attr] >= values[0] && d[attr] <= values[1] && d["Type"]== mytype;
       });
     }
-    draw(toVisualize);
+    drawVis(toVisual);
 }
-
-
 
 </script>
 
