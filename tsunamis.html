@@ -59,7 +59,6 @@ div.tooltip {
 <script src="http://d3js.org/topojson.v1.min.js"></script>
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="http://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-<!--<script src="https://rawgit.com/robertabrooks/Tsunami-Interactive/master/tsunamis.js"></script>-->
 
 <script>
 d3.select(window).on("resize", throttle);
@@ -71,13 +70,9 @@ var zoom = d3.behavior.zoom()
 
 var width = document.getElementById('container').offsetWidth;
 var height = width / 2;
-
 var topo,projection,path,svg,g;
-
 var graticule = d3.geo.graticule();
-
 var tooltip = d3.select("#container").append("div").attr("class", "tooltip hidden");
-
 var dataset;
 
 setup(width,height);
@@ -113,12 +108,10 @@ function draw(data) {
      .attr("class", "graticule")
      .attr("d", path);
 
-
   g.append("path")
    .datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
    .attr("class", "equator")
    .attr("d", path);
-
 
   var country = g.selectAll(".country").data(topo);
 
@@ -149,7 +142,6 @@ function draw(data) {
 
   //adding Tsunamis from external CSV file
   d3.csv("tsunamis.csv", function(error, tsunamis) {
-
     tsunamis.forEach(function(i){
       addpoint(i.Longitude, i.Latitude, i.Year);
     });
@@ -207,7 +199,6 @@ function move() {
   zscale = s;
   var h = height/4;
 
-
   t[0] = Math.min(
     (width/height)  * (s - 1), 
     Math.max( width * (1 - s), t[0] )
@@ -223,7 +214,6 @@ function move() {
 
   //adjust the country hover stroke width based on zoom level
   d3.selectAll(".country").style("stroke-width", 1.5 / s);
-
 }
 
 var throttleTimer;
@@ -267,25 +257,25 @@ function addpoint(lat,lon,text) {
 var attributes = ["Years"];
 var ranges = [1950,2014];
 var maxYear = 2014;
-
+var values;
 
 //function for slider data
 $(function() {
-    $( "#year" ).slider({
+    $("#year").slider({
         range: true,
         min:  1950,
         max: maxYear,
-        values: [ 1950, maxYear ],
-        slide: function( event, ui ) {
-          $( "#specyear" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+        values: [1950, maxYear],
+        slide: function(event, ui) {
+          $("#specyear").val(ui.values[0] + " - " + ui.values[1]);
           filterData("Years", ui.values);
         }
     });
-    $( "#specyear" ).val( $( "#year" ).slider( "values", 0 ) + 
-        " - " + $( "#year" ).slider( "values", 1 ) );
+    $("#specificyear").val($("#year").slider("values", 0) + " - " + $("#year").slider("values", 1));
 });
 
 //filter data and draw vis
+/*
 function filterData(attr,values) {
   for (i = 0; i < attributes.length; i++){
       if (attr == attributes[i]){
@@ -303,7 +293,7 @@ function filterData(attr,values) {
       });
     }
     drawVis(toVisual);
-}
+}*/
 
 </script>
 
