@@ -60,6 +60,10 @@ div.tooltip {
     <label for="rngyear">Range of Years:</label>
     <input type="text" id="rngyear" readyonly style="border:0; color:#f6931f; font-weight:bold;">
 
+  <p>Magnitude</p>
+    <div id="magn" class="slider-range"></div>
+    <label for="magnitude">Magnitude Range:</label>
+    <input type="text" id="magnitude" readyonly style="border:0; color:#f6931f; font-weight:bold;">
   <div id="container"></div>
 
 <script>
@@ -228,6 +232,7 @@ function addpoint(lat,lon, text) {
 var attributes = ["Years"];
 var ranges = [1950,2014];
 var maxYear = 2014;
+var maxMagnitude = 10;
 var values;
 
 //filter data and draw vis
@@ -263,6 +268,20 @@ $(function() {
         }
     });
     $("#rngyear").val($("#yr").slider("values", 0) + " - " + $("#yr").slider("values", 1));
+});
+
+$(function() {
+    $("#magn").slider({
+        range: true,
+        min: 0,
+        max: maxMagnitude,
+        values: [0, maxMagnitude],
+        slide: function(event, ui) { 
+            $("#magnitude").val(ui.values[0] + " - " + ui.values[1]);
+            filterData("Magnitude", ui.values);
+        }
+    });
+    $("#magnitude").val($("#magn").slider("values", 0) + " - " + $("#magn").slider("values", 1));
 });
 
 </script>
