@@ -43,7 +43,6 @@ div.tooltip {
 }
 
 </style>
-</head>
 <body>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -51,6 +50,7 @@ div.tooltip {
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="http://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="style.css">
 
 
   <h1>Tsunamis Worldwide 1950 - 2014</h1>
@@ -149,7 +149,7 @@ function draw(data) {
   //adding Tsunamis from external CSV file
   d3.csv("tsunamis.csv", function(error, tsunamis) {
     tsunamis.forEach(function(i){
-      addpoint(i.Longitude, i.Latitude, i.Year);
+      addpoint(i.Longitude, i.Latitude);
     });
 
   dataset = tsunamis;
@@ -204,7 +204,7 @@ function click() {
 }
 
 //function to add points and text to the map (used in plotting Tsunamis)
-function addpoint(lat,lon, text) {
+function addpoint(lat,lon) {
   //var circles = svg.selectAll("circle").data(dataset);
   var gpoint = g.append("g").attr("class", "gpoint");
   var x = projection([lat,lon])[0];
@@ -219,14 +219,14 @@ function addpoint(lat,lon, text) {
         //.style("opacity", 0.75)
         //.style("stroke", "black");
 
-  //conditional in case a point has no associated text
+  /*conditional in case a point has no associated text
   if(text.length>0){
     gpoint.append("text")
           .attr("x", x+2)
           .attr("y", y+2)
           .attr("class","text")
           .text(text);
-  }
+  }*/
 }
 
 var attributes = ["Years"];
@@ -234,6 +234,9 @@ var ranges = [1950,2014];
 var maxYear = 2014;
 var maxMagnitude = 10;
 var values;
+var patt = new RegExp("All");
+var mytype ="All";
+
 
 //filter data and draw vis
 function filterData(attr,values) {
@@ -252,7 +255,7 @@ function filterData(attr,values) {
         return d[attr] >= values[0] && d[attr] <= values[1] && d["Type"]== mytype;
       });
     }
-    drawVis(toVisual);
+    //drawVis(toVisual);
 }
 
 //function for slider data
