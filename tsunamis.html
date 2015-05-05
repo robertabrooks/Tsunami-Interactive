@@ -142,14 +142,19 @@ function draw(data) {
 
   //adding Tsunamis from external CSV file
   d3.csv("tsunamis.csv", function(error, tsunamis) {
+    if(error) {
+      return console.warn(error);
+    }
     tsunamis.forEach(function(i){
-      addpoint(i.Longitude, i.Latitude, i.Year);
+      addpoint(i.Longitude, i.Latitude);
     });
 
   dataset = tsunamis;
+  //drawVis(dataset);
   });
 }
 
+/*
 function drawVis(data) {
     var circles = svg.selectAll("circle")
       .data(data);
@@ -182,7 +187,7 @@ function drawVis(data) {
           .duration(500)
           .style("opacity", 0)
   });
-}
+}*/
 
 function redraw() {
   width = document.getElementById('container').offsetWidth;
@@ -230,18 +235,21 @@ function click() {
   console.log(latlon);
 }
 
-//function to add points and text to the map (used in plotting capitals)
-function addpoint(lat,lon,text) {
-
+//function to add points and text to the map (used in plotting Tsunamis)
+function addpoint(data) {
+  var circles = svg.selectAll("circle").data(dataset);
   var gpoint = g.append("g").attr("class", "gpoint");
   var x = projection([lat,lon])[0];
   var y = projection([lat,lon])[1];
 
-  gpoint.append("svg:circle")
+  //gpoint.append("svg:circle")
+  circles.enter().append(circle)
         .attr("cx", x)
         .attr("cy", y)
         .attr("class","point")
-        .attr("r", 1.5);
+        .attr("r", 2.0);
+        //.style("opacity", 0.75)
+        //.style("stroke", "black");
 
   //conditional in case a point has no associated text
   if(text.length>0){
