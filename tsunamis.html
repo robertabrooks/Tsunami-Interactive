@@ -3,7 +3,7 @@
 <title>Tsunamis Around The World From 1950 - 2014</title>
 <style>
 /*.country:hover{
-  stroke: #fff;
+  stroke: #222;
   stroke-width: 1.5px;
 }*/
 .text{
@@ -73,6 +73,9 @@ var zoom = d3.behavior.zoom()
     .scaleExtent([1, 9])
     .on("zoom", move);
 
+// var tooltip = d3.select("tooltip").append("div")
+//   .attr("class","tooltip")
+//   .style("opacity",0);
 
 var width = document.getElementById('container').offsetWidth;
 var height = width / 2;
@@ -126,7 +129,7 @@ function draw(data) {
       .attr("d", path)
       .attr("id", function(d,i) { return d.id; })
       .attr("title", function(d,i) { return d.properties.name; })
-      .style("fill", function(d, i) { return d.properties.color = "#169E7B"; });
+      .style("fill", function(d, i) { return d.properties.color = "#666633"; });
 
   //offsets for tooltips
   var offsetL = document.getElementById('container').offsetLeft+20;
@@ -148,8 +151,11 @@ function draw(data) {
 
   //adding Tsunamis from external CSV file
   d3.csv("tsunamis.csv", function(error, tsunamis) {
+    if (error) {
+      return console.warn(error);
+    }
     tsunamis.forEach(function(i){
-      addpoint(i.Longitude, i.Latitude);
+      //addpoint(i.Longitude, i.Latitude);
     });
 
   dataset = tsunamis;
@@ -205,38 +211,61 @@ function click() {
 
 //function to add points and text to the map (used in plotting Tsunamis)
 function addpoint(lat,lon) {
-  //var circles = svg.selectAll("circle").data(dataset);
   var gpoint = g.append("g").attr("class", "gpoint");
   var x = projection([lat,lon])[0];
   var y = projection([lat,lon])[1];
   
-  //circles.enter().append(circle)
   gpoint.append("svg:circle")
         .attr("cx", x)
         .attr("cy", y)
         .attr("class","point")
-        .attr("r", 1.5);
-        //.style("opacity", 0.75)
-        //.style("stroke", "black");
-
-  /*conditional in case a point has no associated text
-  if(text.length>0){
-    gpoint.append("text")
-          .attr("x", x+2)
-          .attr("y", y+2)
-          .attr("class","text")
-          .text(text);
-  }*/
+        .attr("r", 2.5)
+        .style("fill", "purple");
 }
 
-var attributes = ["Years"];
-var ranges = [1950,2014];
+function drawVis(data) {
+  // var x = projection([lat,lon])[0];
+  // var y = projection([lat,lon])[1];
+  var circles = svg.selectAll("circle")
+    .data(data);
+  circles
+        // .attr("cx", x)
+        // .attr("cy", y)
+    .attr("cx", function(d) { return (d.latitude);  })
+    .attr("cy", function(d) { return (d.longitude); })
+    .style("fill", function(d) { return d.color ="red"; });
+  circles.exit().remove();
+
+  circles.enter().append("circle")
+      .attr("cx", function(d) { return (d.latitude);  })
+      .attr("cy", function(d) { return (d.longitude);  })
+      .attr("r", 6)
+      .style("fill", function(d) {return d.color ="red";}) // Determines color
+      .style("opacity", 0.75)
+      .style("stroke", "black");
+  circles 
+    .on("mouseover", function(d,i) {
+    d3.select(this).attr("r", 9);
+    tooltip.transition()
+      .duration(400)
+      .style("opacity", 1);
+    tooltip.html("<b>"+d.Year+"</b><br>Country: "+d.Country+"<br>Magnitude: "+d.Magnitude+"<br>Deats: "+d.Deaths);
+    })
+    .on("mouseout", function(d,i) {
+    d3.select(this).attr("r",5);
+    tooltip.transition()
+        .duration(800)
+        .style("opacity", 0);
+  });
+}
+
+var attributes = ["Years", "Magnitude"];
+var ranges = [[1950,2014],[0,10]];
 var maxYear = 2014;
 var maxMagnitude = 10;
 var values;
-var patt = new RegExp("All");
 var mytype ="All";
-
+var patt = new RegExp("All");
 
 //filter data and draw vis
 function filterData(attr,values) {
@@ -248,14 +277,14 @@ function filterData(attr,values) {
     var res = patt.test(mytype);
     if(res){
       var toVisual = dataset.filter(function(d) { 
-        return d[attr] >= values[0] && d[attr] <= values[1];
+        return (d["Year"] >= ranges[0][0] && d["Year"] <= ranges[0][1]) && (d["Magnitude"] >=ranges[1][0] && d["Magnitude"] <= ranges[1][1]);
       }); 
     } else {
       var toVisual = dataset.filter(function(d) { 
-        return d[attr] >= values[0] && d[attr] <= values[1] && d["Type"]== mytype;
+        return (d["Year"] >= ranges[0][0] && d["Year"] <= ranges[0][1]) && (d["Magnitude"] >= [1][0] && d["Magnitude"] <= ranges[1][1]) && d["Type"]==mytype;
       });
     }
-    //drawVis(toVisual);
+    drawVis(toVisual);
 }
 
 //function for slider data
