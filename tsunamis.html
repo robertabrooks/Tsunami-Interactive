@@ -209,7 +209,7 @@ function click() {
 }
 
 //function to add points and text to the map (used in plotting Tsunamis)
-function addpoint(Longitude, Latitude, Magnitude, Year, Deaths, Injuries, Country, LocationName,MaximumWaterHeight) {
+function addpoint(Longitude, Latitude, Magnitude, Year, Deaths, Injuries, Country) {
   var gpoint = g.append("g").attr("class", "gpoint");
   var x = projection([Longitude,Latitude])[0];
   var y = projection([Longitude,Latitude])[1];
@@ -226,7 +226,7 @@ function addpoint(Longitude, Latitude, Magnitude, Year, Deaths, Injuries, Countr
     tooltips.transition()
       .duration(400)
       .style("opacity", 1);
-    tooltips.html("<b>"+Year+"</b><br>Country: "+Country+"<br>Location Name: "+LocationName+"<br>Magnitude: "+Magnitude+"<br>Maximum Water Height(meters): "+MaximumWaterHeight+"<br>Deaths: "+Deaths+"<br>Injuries: "+Injuries);
+    tooltips.html("<b>"+Year+"</b><br>Country: "+Country+"<br>Magnitude: "+Magnitude+"<br>Deaths: "+Deaths+"<br>Injuries: "+Injuries);
     })
     .on("mouseout", function(d) {
     d3.select(this).attr("r",5);
@@ -245,8 +245,7 @@ function drawVis(data) {
   circles.exit().remove();
 
   data.forEach(function(i){
-      addpoint(i.Longitude, i.Latitude, i.Magnitude, i.Year, i.Deaths, i.Injuries, i.Country, i.LocationName, 
-        i.MaximumWaterHeight);
+      addpoint(i.Longitude, i.Latitude, i.Magnitude, i.Year, i.Deaths, i.Injuries, i.Country);
   });
 }
 
