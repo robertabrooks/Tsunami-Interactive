@@ -209,7 +209,7 @@ function click() {
 }
 
 //function to add points and text to the map (used in plotting Tsunamis)
-function addpoint(Longitude, Latitude, Magnitude, Year, Deaths, Injuries, Country) {
+function addpoint(Longitude, Latitude, Magnitude, Year, Deaths, Injuries, Country, Intensity) {
   var gpoint = g.append("g").attr("class", "gpoint");
   var x = projection([Longitude,Latitude])[0];
   var y = projection([Longitude,Latitude])[1];
@@ -219,17 +219,17 @@ function addpoint(Longitude, Latitude, Magnitude, Year, Deaths, Injuries, Countr
         .attr("cy", y)
         .attr("class","point")
         .attr("r", 3)
-        .style("fill", "red");
-  gpoint
+        .style("fill", "red")
+        .style("stroke","black")
     .on("mouseover", function(d,i) {
-    d3.select(this).attr("r", 9);
+    d3.select(this).attr("r", 6.5);
     tooltips.transition()
       .duration(400)
       .style("opacity", 1);
     tooltips.html("<b>"+Year+"</b><br>Country: "+Country+"<br>Magnitude: "+Magnitude+"<br>Deaths: "+Deaths+"<br>Injuries: "+Injuries);
     })
     .on("mouseout", function(d) {
-    d3.select(this).attr("r",5);
+    d3.select(this).attr("r",3);
     tooltips.transition()
         .duration(800)
         .style("opacity", 0);
