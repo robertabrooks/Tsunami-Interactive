@@ -6,3 +6,12 @@ h1 {
 body {
 	font: 12px sans-serif;
 }
+
+<style>  
+	.tooltip {     
+		position: absolute;   
+		width: 100px;   
+		height: 50px;   
+		pointer-events: none;   
+	}  
+</style>
